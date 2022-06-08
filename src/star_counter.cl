@@ -79,7 +79,7 @@ __kernel void count_stars_local_mem_copy(
         local_mem[local_idx(ext_coord)] = read_imageui(src, smp, to_global_coord(ext_coord)).x;
     }
 
-    // Wait for all threads to finish copying
+    // Wait for all work-items to finish copying
     barrier(CLK_GLOBAL_MEM_FENCE);
     barrier(CLK_LOCAL_MEM_FENCE);
 
