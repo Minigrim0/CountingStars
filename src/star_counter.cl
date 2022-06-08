@@ -10,7 +10,7 @@ __constant uint2 thresholds = {200, 30};
  */
 int local_idx(int2 local_coord){
     // Add 1 to account for the border (which contains pixels from the previous chunk)
-    return (local_coord.x + 1) + ((local_coord.y + 1) * get_local_size(0));
+    return (local_coord.x + 1) + ((local_coord.y + 1) * (get_local_size(0) + 2));
 }
 
 /**
