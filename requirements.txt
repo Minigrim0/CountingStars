@@ -1,0 +1,6 @@
+numpy==1.22.4
+Pillow==9.1.1
+platformdirs==2.5.2
+pyopencl==2022.1.5
+pytools==2022.1.9
+typing_extensions==4.2.0
