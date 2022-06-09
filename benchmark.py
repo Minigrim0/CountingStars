@@ -39,24 +39,31 @@ def benchmark():
 
         results[image_name] = {
             "size": color_image.shape,
+            "work_groups": {}
         }
 
         for work_size in ((4, 4), (8, 8), (16, 16), (32, 32)):
-            results[image_name][work_size[0]] = {}
+            results[image_name]["work_groups"][work_size[0]] = {}
 
-            results[image_name][work_size[0]]["local_kern"] = []
-            results[image_name][work_size[0]]["global_kern"] = []
-            results[image_name][work_size[0]]["grayscale_kern"] = []
-            results[image_name][work_size[0]]["total"] = []
+            results[image_name]["work_groups"][work_size[0]]["local_kern"] = []
+            results[image_name]["work_groups"][work_size[0]]["global_kern"] = []
+            results[image_name]["work_groups"][work_size[0]]["grayscale_kern"] = []
+            results[image_name]["work_groups"][work_size[0]]["total"] = []
 
             for x in range(50):
                 start = timeit.default_timer()
                 gs_image, timing = to_grayscale(context, color_image, queue, gs_kern, work_size)
-                results[image_name][work_size[0]]["grayscale_kern"].append(timing)
-                results[image_name][work_size[0]]["local_kern"].append(count_stars_local_mem(context, gs_image, queue, count_kern, work_size)[1])
-                results[image_name][work_size[0]]["global_kern"].append(count_stars_global_mem(context, gs_image, queue, count_kern, work_size)[1])
+                results[image_name]["work_groups"][work_size[0]]["grayscale_kern"].append(timing)
+                results[image_name]["work_groups"][work_size[0]]["local_kern"].append(count_stars_local_mem(context, gs_image, queue, count_kern, work_size)[1])
+                results[image_name]["work_groups"][work_size[0]]["global_kern"].append(count_stars_global_mem(context, gs_image, queue, count_kern, work_size)[1])
                 end = timeit.default_timer()
-                results[image_name][work_size[0]]["total"].append(end - start)
+                results[image_name]["work_groups"][work_size[0]]["total"].append(end - start)
+
+    results = {
+        "device_name": device.name,
+        "device_vendor": device.vendor,
+        "results": results
+    }
 
     with open("./results/results.json", "w+") as result_fd:
         json.dump(results, result_fd, indent=4)
